@@ -70,28 +70,19 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
     public void channelActive(ChannelHandlerContext ctx) throws Exception
     {
         //instanceRegisterReq
-//        byte[] ipBytes = {(byte)0xC0, (byte)0xA8, (byte)0x01, (byte)0x04};
-//        InstanceRegisterReq registerReqData = new InstanceRegisterReq(_serverName, 8081, ipBytes);
-//        StorageClsMetaBeacon metaBeacon = new StorageClsMetaBeacon(223, registerReqData);
-////        int metaBeaconSize = 3 + 2 + 2 + 2 + metaBeacon.getPayloadSize() + 2;
-////        byte[] metaBeaconSerializedBuffer = new byte[metaBeaconSize];
-////        //int metaBeaconSerializedBufferIndex = metaBeacon.serialize(metaBeaconSerializedBuffer,0, metaBeaconSize, _logger);
-////        int metaBeaconSerializedBufferIndex = _l5parser.serialize(metaBeaconSerializedBuffer, 0, metaBeaconSize, metaBeacon, _logger);
-//        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(metaBeacon)));
-//
+        byte[] ipBytes = {(byte)0xC0, (byte)0xA8, (byte)0x49, (byte)0x96};
+        InstanceRegisterReq registerReqData = new InstanceRegisterReq(_serverName, 9999, ipBytes);
+        StorageClsMetaBeacon metaBeacon = new StorageClsMetaBeacon(223, registerReqData);
+
 //        //AccountRegisterReq
 //        AccountRegisterReq accRegReq = new AccountRegisterReq("in.intellicar" + _nameIncrementer++);
 //        StorageClsMetaBeacon accRegReqBeacon = new StorageClsMetaBeacon(223, accRegReq);
-////        int accRegReqBeaconSize = accRegReqBeacon.getBeaconSize();
-////        byte[] accRegReqBeaconSerializedBuffer = new byte[accRegReqBeaconSize];
-////        int metaBeaconSerializedBufferIndex = _l5parser.serialize(accRegReqBeaconSerializedBuffer, 0, accRegReqBeaconSize, accRegReqBeacon, _logger);
-//        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(accRegReqBeacon)));
 
         //NamespaceRegReq
-        byte[] accIdBytes = LittleEndianUtils.hexStringToByteArray("1BA5EC591BB03A6F4DF248BE577CA904A81A9BBAE8678B65C59EB08B8636A24C");
-        NamespaceRegReq nsRegReq = new NamespaceRegReq("ns"+ _nameIncrementer++, new SHA256Item(accIdBytes));
-        StorageClsMetaBeacon nsRegReqBeacon = new StorageClsMetaBeacon(233, nsRegReq);
-        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(nsRegReqBeacon)));
+//        byte[] accIdBytes = LittleEndianUtils.hexStringToByteArray("1BA5EC591BB03A6F4DF248BE577CA904A81A9BBAE8678B65C59EB08B8636A24C");
+//        NamespaceRegReq nsRegReq = new NamespaceRegReq("ns"+ _nameIncrementer++, new SHA256Item(accIdBytes));
+//        StorageClsMetaBeacon nsRegReqBeacon = new StorageClsMetaBeacon(233, nsRegReq);
+        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(metaBeacon)));
     }
 
     private byte[] returnSerializedByteStreamOfBeacon (StorageClsMetaBeacon lBeacon)

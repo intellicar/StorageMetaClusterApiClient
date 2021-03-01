@@ -80,23 +80,23 @@ public class StorageMetaClsClient implements Runnable
         Logger logger = Logger.getLogger("Client");
 
         //many instances for testing
-        StorageMetaClsClient[] clients = new StorageMetaClsClient[15];
-        for (int i = 0; i < 15 ; i++)
-        {
-            clients[i] = new StorageMetaClsClient("192.168.73.150", 10107, "Server" + i, logger);
-            clients[i].startClient();
-        }
-        for(int i = 0; i < 15; i++)
-        {
-            clients[i].stopClient();
-        }
+//        StorageMetaClsClient[] clients = new StorageMetaClsClient[15];
+//        for (int i = 0; i < 15 ; i++)
+//        {
+//            clients[i] = new StorageMetaClsClient("192.168.73.150", 10107, "Server" + i, logger);
+//            clients[i].startClient();
+//        }
+//        for(int i = 0; i < 15; i++)
+//        {
+//            clients[i].stopClient();
+//        }
 
         //////Single client
-//        StorageMetaClsClient client = new StorageMetaClsClient("192.168.73.150", 10107, "Server4Sync", logger);
-//        //client.startClient();
-//        Thread clientThread = new Thread(client);
-//        clientThread.start();
-//        clientThread.join();
+        StorageMetaClsClient client = new StorageMetaClsClient("192.168.73.150", 10107, "Server4Sync", logger);
+        //client.startClient();
+        Thread clientThread = new Thread(client);
+        clientThread.start();
+        clientThread.join();
 
     }
 }
