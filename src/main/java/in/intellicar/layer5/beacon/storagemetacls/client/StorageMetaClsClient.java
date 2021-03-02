@@ -92,11 +92,10 @@ public class StorageMetaClsClient implements Runnable
 //        }
 
         //////Single client
-        StorageMetaClsClient client = new StorageMetaClsClient("192.168.73.150", 10107, "Server4Sync", logger);
+        StorageMetaClsClient client = new StorageMetaClsClient("192.168.73.150", 10107, "instance/naveen", logger);
         //client.startClient();
         Thread clientThread = new Thread(client);
         clientThread.start();
         clientThread.join();
-
     }
 }

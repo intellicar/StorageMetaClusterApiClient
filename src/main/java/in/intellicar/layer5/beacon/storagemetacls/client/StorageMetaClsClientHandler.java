@@ -7,16 +7,13 @@ import in.intellicar.layer5.beacon.storagemetacls.PayloadTypes;
 import in.intellicar.layer5.beacon.storagemetacls.StorageClsMetaBeacon;
 import in.intellicar.layer5.beacon.storagemetacls.StorageClsMetaBeaconDeser;
 import in.intellicar.layer5.beacon.storagemetacls.StorageClsMetaPayload;
-import in.intellicar.layer5.beacon.storagemetacls.account.AccountRegisterReq;
-import in.intellicar.layer5.beacon.storagemetacls.account.AccountRegisterRsp;
-import in.intellicar.layer5.beacon.storagemetacls.account.NamespaceRegReq;
+import in.intellicar.layer5.beacon.storagemetacls.account.AccountInstanceReq;
+import in.intellicar.layer5.beacon.storagemetacls.account.AccountInstanceRsp;
 import in.intellicar.layer5.beacon.storagemetacls.account.NamespaceRegRsp;
-import in.intellicar.layer5.beacon.storagemetacls.instance.InstanceRegisterReq;
 import in.intellicar.layer5.beacon.storagemetacls.instance.InstanceRegisterRsp;
 import in.intellicar.layer5.beacon.storagemetacls.instance.StorageClsMetaErrorRsp;
 import in.intellicar.layer5.data.Deserialized;
-import in.intellicar.layer5.utils.LittleEndianUtils;
-import in.intellicar.layer5.utils.sha.SHA256Item;
+import in.intellicar.layer5.utils.sha.SHA256Utils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -70,26 +67,28 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
     public void channelActive(ChannelHandlerContext ctx) throws Exception
     {
         //instanceRegisterReq
-        byte[] ipBytes = {(byte)0xC0, (byte)0xA8, (byte)0x49, (byte)0x96};
-        InstanceRegisterReq registerReqData = new InstanceRegisterReq(_serverName, 9999, ipBytes);
-        StorageClsMetaBeacon metaBeacon = new StorageClsMetaBeacon(223, registerReqData);
+//        byte[] ipBytes = {(byte)0xC0, (byte)0xA8, (byte)0x49, (byte)0x96};
+//        InstanceRegisterReq registerReqData = new InstanceRegisterReq(_serverName, 9999, ipBytes);
+//        StorageClsMetaBeacon metaBeacon = new StorageClsMetaBeacon(223, registerReqData);
+//        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(metaBeacon)));
 
-//        //AccountRegisterReq
-//        AccountRegisterReq accRegReq = new AccountRegisterReq("in.intellicar" + _nameIncrementer++);
-//        StorageClsMetaBeacon accRegReqBeacon = new StorageClsMetaBeacon(223, accRegReq);
+//        AccountInstanceReq
+        AccountInstanceReq accRegReq = new AccountInstanceReq(SHA256Utils.getSHA256("in.intellicar".getBytes()));
+        StorageClsMetaBeacon accRegReqBeacon = new StorageClsMetaBeacon(223, accRegReq);
+        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(accRegReqBeacon)));
 
         //NamespaceRegReq
 //        byte[] accIdBytes = LittleEndianUtils.hexStringToByteArray("1BA5EC591BB03A6F4DF248BE577CA904A81A9BBAE8678B65C59EB08B8636A24C");
 //        NamespaceRegReq nsRegReq = new NamespaceRegReq("ns"+ _nameIncrementer++, new SHA256Item(accIdBytes));
 //        StorageClsMetaBeacon nsRegReqBeacon = new StorageClsMetaBeacon(233, nsRegReq);
-        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(metaBeacon)));
+//        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(nsRegReqBeacon)));
     }
 
     private byte[] returnSerializedByteStreamOfBeacon (StorageClsMetaBeacon lBeacon)
     {
         int beaconSize = lBeacon.getBeaconSize();
         byte[] beaconSerializedBuffer = new byte[beaconSize];
-        int metaBeaconSerializedBufferIndex = _l5parser.serialize(beaconSerializedBuffer, 0, beaconSize, lBeacon, _logger);
+        _l5parser.serialize(beaconSerializedBuffer, 0, beaconSize, lBeacon, _logger);
         return beaconSerializedBuffer;
     }
 
@@ -191,8 +190,8 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
 //                    TODO:: send role request
                 case ACCOUNT_REGISTER_RSP:
                     _logger.info("Account Register Response");
-                    AccountRegisterRsp accRegRsp = (AccountRegisterRsp) payload;
-                    byte[] AccIdInBuffer = new byte[accRegRsp.accountID.hashdata.length];
+                    AccountInstanceRsp accRegRsp = (AccountInstanceRsp) payload;
+                    byte[] AccIdInBuffer = new byte[accRegRsp.instanceID.hashdata.length];
                     _logger.info(accRegRsp.toJsonString(_logger));
                     break;
                 case NAMESPACE_REGISTER_RSP:
