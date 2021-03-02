@@ -7,13 +7,9 @@ import in.intellicar.layer5.beacon.storagemetacls.PayloadTypes;
 import in.intellicar.layer5.beacon.storagemetacls.StorageClsMetaBeacon;
 import in.intellicar.layer5.beacon.storagemetacls.StorageClsMetaBeaconDeser;
 import in.intellicar.layer5.beacon.storagemetacls.StorageClsMetaPayload;
-import in.intellicar.layer5.beacon.storagemetacls.account.AccountRegisterReq;
-import in.intellicar.layer5.beacon.storagemetacls.account.AccountRegisterRsp;
-import in.intellicar.layer5.beacon.storagemetacls.account.NamespaceRegReq;
-import in.intellicar.layer5.beacon.storagemetacls.account.NamespaceRegRsp;
-import in.intellicar.layer5.beacon.storagemetacls.instance.InstanceRegisterReq;
-import in.intellicar.layer5.beacon.storagemetacls.instance.InstanceRegisterRsp;
-import in.intellicar.layer5.beacon.storagemetacls.instance.StorageClsMetaErrorRsp;
+import in.intellicar.layer5.beacon.storagemetacls.payload.*;
+import in.intellicar.layer5.beacon.storagemetacls.payload.metaclsservice.*;
+import in.intellicar.layer5.beacon.storagemetacls.payload.accidservice.*;
 import in.intellicar.layer5.data.Deserialized;
 import in.intellicar.layer5.utils.LittleEndianUtils;
 import in.intellicar.layer5.utils.sha.SHA256Item;
@@ -189,10 +185,10 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
                     _logger.info("Received Instance Bucket Response");
                     break;
 //                    TODO:: send role request
-                case ACCOUNT_REGISTER_RSP:
+                case ACCOUNT_INSTANCE_RSP:
                     _logger.info("Account Register Response");
-                    AccountRegisterRsp accRegRsp = (AccountRegisterRsp) payload;
-                    byte[] AccIdInBuffer = new byte[accRegRsp.accountID.hashdata.length];
+                    AccountInstanceRsp accRegRsp = (AccountInstanceRsp) payload;
+                    byte[] AccIdInBuffer = new byte[accRegRsp.instanceID.hashdata.length];
                     _logger.info(accRegRsp.toJsonString(_logger));
                     break;
                 case NAMESPACE_REGISTER_RSP:
