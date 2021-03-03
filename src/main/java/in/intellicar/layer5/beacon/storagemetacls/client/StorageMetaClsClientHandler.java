@@ -185,13 +185,13 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
                     _logger.info("Received Instance Bucket Response");
                     break;
 //                    TODO:: send role request
-                case ACCOUNT_INSTANCE_RSP:
+                case ACCOUNT_META_INSTANCE_RSP:
                     _logger.info("Account Register Response");
-                    AccountInstanceRsp accRegRsp = (AccountInstanceRsp) payload;
+                    AccIdMetaInstanceRsp accRegRsp = (AccIdMetaInstanceRsp) payload;
                     byte[] AccIdInBuffer = new byte[accRegRsp.instanceID.hashdata.length];
                     _logger.info(accRegRsp.toJsonString(_logger));
                     break;
-                case NAMESPACE_REGISTER_RSP:
+                case NAMESPACE_META_INSTANCE_RSP:
                     _logger.info("NameSpace Register Response");
                     NamespaceRegRsp nsRegRsp = (NamespaceRegRsp) payload;
                     byte[] nsIdInBuffer = new byte[nsRegRsp.namespaceID.hashdata.length];
