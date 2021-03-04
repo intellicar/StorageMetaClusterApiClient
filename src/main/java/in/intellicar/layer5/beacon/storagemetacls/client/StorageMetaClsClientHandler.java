@@ -72,7 +72,8 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
 //        StorageClsMetaBeacon metaBeacon = new StorageClsMetaBeacon(223, registerReqData);
 //        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(metaBeacon)));
 
-        // InstanceIDToBuckReq
+        // InstanceIdToBuckReq
+        _logger.info("Sending InstanceIdToBuckReq");
         InstanceIdToBuckReq instanceIdToBuckReq = new InstanceIdToBuckReq(new SHA256Item(LittleEndianUtils.hexStringToByteArray("210291032E56B4886BDE2A6EF6311983C94AE460E61B6453DA5BA859EF76ACD8")));
         StorageClsMetaBeacon inToBuckReqBeacon = new StorageClsMetaBeacon(223, instanceIdToBuckReq);
         ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(inToBuckReqBeacon)));
@@ -197,7 +198,7 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
                 case INSTANCE_BUCKET_RSP:
                     _logger.info("Received Instance Bucket Response");
                     InstanceIdToBuckRsp rsp = (InstanceIdToBuckRsp) payload;
-//                    System.out.println((rsp.toJsonString(_logger)));
+                    _logger.info(rsp.toJsonString(_logger));
                     break;
 //                    TODO:: send role request
                 case ACCOUNT_META_INSTANCE_RSP:
