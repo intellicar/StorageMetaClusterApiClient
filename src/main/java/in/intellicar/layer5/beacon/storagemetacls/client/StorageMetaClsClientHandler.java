@@ -13,6 +13,7 @@ import in.intellicar.layer5.beacon.storagemetacls.payload.accidservice.*;
 import in.intellicar.layer5.data.Deserialized;
 import in.intellicar.layer5.utils.LittleEndianUtils;
 import in.intellicar.layer5.utils.sha.SHA256Item;
+import in.intellicar.layer5.utils.sha.SHA256Utils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -66,19 +67,31 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
     public void channelActive(ChannelHandlerContext ctx) throws Exception
     {
         //instanceRegisterReq
-        byte[] ipBytes = {(byte)0xC0, (byte)0xA8, (byte)0x49, (byte)0x96};
-        InstanceRegisterReq registerReqData = new InstanceRegisterReq(_serverName, 9999, ipBytes);
-        StorageClsMetaBeacon metaBeacon = new StorageClsMetaBeacon(223, registerReqData);
+//        byte[] ipBytes = {(byte)0xC0, (byte)0xA8, (byte)0x49, (byte)0x96};
+//        InstanceRegisterReq registerReqData = new InstanceRegisterReq(_serverName, 9999, ipBytes);
+//        StorageClsMetaBeacon metaBeacon = new StorageClsMetaBeacon(223, registerReqData);
+//        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(metaBeacon)));
 
-//        //AccountRegisterReq
-//        AccountRegisterReq accRegReq = new AccountRegisterReq("in.intellicar" + _nameIncrementer++);
-//        StorageClsMetaBeacon accRegReqBeacon = new StorageClsMetaBeacon(223, accRegReq);
+        // InstanceIDToBuckReq
+        InstanceIdToBuckReq instanceIdToBuckReq = new InstanceIdToBuckReq(new SHA256Item(LittleEndianUtils.hexStringToByteArray("210291032E56B4886BDE2A6EF6311983C94AE460E61B6453DA5BA859EF76ACD8")));
+        StorageClsMetaBeacon inToBuckReqBeacon = new StorageClsMetaBeacon(223, instanceIdToBuckReq);
+        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(inToBuckReqBeacon)));
+
+        //AccIDMetaInstanceRequest
+//        AccIdMetaInstanceReq accountInstanceReqReq = new AccIdMetaInstanceReq(SHA256Utils.getSHA256("in.intellicar"));
+//        StorageClsMetaBeacon accInstReqBeacon = new StorageClsMetaBeacon(223, accountInstanceReqReq);
+//        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(accInstReqBeacon)));
+
+        // AccIDReq
+//        AccountIDReq accountIDReq = new AccountIDReq(SHA256Utils.getSHA256("in.intellicar"));
+//        StorageClsMetaBeacon accIDReqBeacon = new StorageClsMetaBeacon(223, accountIDReq);
+//        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(accIDReqBeacon)));
 
         //NamespaceRegReq
 //        byte[] accIdBytes = LittleEndianUtils.hexStringToByteArray("1BA5EC591BB03A6F4DF248BE577CA904A81A9BBAE8678B65C59EB08B8636A24C");
 //        NamespaceRegReq nsRegReq = new NamespaceRegReq("ns"+ _nameIncrementer++, new SHA256Item(accIdBytes));
 //        StorageClsMetaBeacon nsRegReqBeacon = new StorageClsMetaBeacon(233, nsRegReq);
-        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(metaBeacon)));
+//        ctx.writeAndFlush(Unpooled.wrappedBuffer(returnSerializedByteStreamOfBeacon(nsRegReqBeacon)));
     }
 
     private byte[] returnSerializedByteStreamOfBeacon (StorageClsMetaBeacon lBeacon)
@@ -183,6 +196,8 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
                     break;
                 case INSTANCE_BUCKET_RSP:
                     _logger.info("Received Instance Bucket Response");
+                    InstanceIdToBuckRsp rsp = (InstanceIdToBuckRsp) payload;
+//                    System.out.println((rsp.toJsonString(_logger)));
                     break;
 //                    TODO:: send role request
                 case ACCOUNT_META_INSTANCE_RSP:
@@ -196,6 +211,12 @@ public class StorageMetaClsClientHandler extends SimpleChannelInboundHandler<Byt
                     NamespaceRegRsp nsRegRsp = (NamespaceRegRsp) payload;
                     byte[] nsIdInBuffer = new byte[nsRegRsp.namespaceID.hashdata.length];
                     _logger.info(nsRegRsp.toJsonString(_logger));
+                    break;
+
+                case ACCOUNT_ID_RSP:
+                    _logger.info("AccountID Response");
+                    AccountIDRsp accountIDRsp = (AccountIDRsp) payload;
+                    _logger.info(accountIDRsp.toJsonString(_logger));
                     break;
 
                 case STORAGE_CLS_META_ERROR_RSP:
