@@ -83,7 +83,7 @@ public class StorageMetaClsClient implements Runnable
 //        StorageMetaClsClient[] clients = new StorageMetaClsClient[15];
 //        for (int i = 0; i < 15 ; i++)
 //        {
-//            clients[i] = new StorageMetaClsClient("192.168.73.150", 10107, "Server" + i, logger);
+//            clients[i] = new StorageMetaClsClient("localhost", 10107, "Server" + i, logger);
 //            clients[i].startClient();
 //        }
 //        for(int i = 0; i < 15; i++)
@@ -92,8 +92,7 @@ public class StorageMetaClsClient implements Runnable
 //        }
 
         //////Single client
-        StorageMetaClsClient client = new StorageMetaClsClient("192.168.0.116", 10107, "/server/naveen/mb15", logger);
-        //client.startClient();
+        StorageMetaClsClient client = new StorageMetaClsClient("localhost", 10108, "/server/naveen/mb15", logger);
         Thread clientThread = new Thread(client);
         clientThread.start();
         clientThread.join();
